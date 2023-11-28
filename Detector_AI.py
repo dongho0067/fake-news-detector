@@ -7,7 +7,7 @@ mixed_data=[]
 
 #Create classes 
 class NewsData:
-    def __init__(title:str, text:str, subject:str, date:str):
+    def __init__(self, title:str, text:str, subject:str, date:str):
         self.title=title
         self.text=text
         self.subject=subject
@@ -37,25 +37,19 @@ def training_data():
         for keys in data:
             for values in fdata.get(keys):
                 if(keys=="title"):
-                    titles.append(fdata.get(keys).get(values))
+                    titles.append(data.get(keys).get(values))
                 elif(keys=="text"):
-                    texts.append(fdata.get(keys).get(values))
-                elif(keys=="subjects"):
-                    subjects.append(fdata.get(keys).get(values))
+                    texts.append(data.get(keys).get(values))
+                elif(keys=="subject"):
+                    subjects.append(data.get(keys).get(values))
                 else:
-                    subjects.append(fdata.get(keys).get(values))
+                    dates.append(data.get(keys).get(values))
 
-    #Put the data into their objects
+
     for x in range(len(titles)):
-        if x<len(fdata.get("title").keys()):
+        if x<len(fdata.get("title").keys()):        
             fake_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         else:
             real_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         if x%2==0:
             mixed_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
-
-
-
-#Results:
-#The final results of the AI should output:
-#The data set used, the number of fake articles found
