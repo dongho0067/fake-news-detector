@@ -1,4 +1,5 @@
 import pandas as pd
+import torch
 
 fake_data=[]
 real_data=[]
@@ -30,7 +31,8 @@ def training_data():
     texts=[]
     subjects=[]
     dates=[]
-
+    
+    #What do we do with rdata?
     for data in fdata, rdata:
         for keys in data:
             for values in fdata.get(keys):
@@ -51,12 +53,6 @@ def training_data():
             real_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         if x%2==0:
             mixed_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
-        
-
-def detector(data:dict):
-    #This is where the AI function will go
-    for keys in data:
-        pass
 
 
 
