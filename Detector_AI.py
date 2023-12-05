@@ -41,35 +41,18 @@ def training_data():
         for keys in data:
             for values in fdata.get(keys):
                 if(keys=="title"):
-                    titles.append(fdata.get(keys).get(values))
+                    titles.append(data.get(keys).get(values))
                 elif(keys=="text"):
-                    texts.append(fdata.get(keys).get(values))
+                    texts.append(data.get(keys).get(values))
                 elif(keys=="subject"):
-                    subjects.append(fdata.get(keys).get(values))
+                    subjects.append(data.get(keys).get(values))
                 else:
-                    dates.append(fdata.get(keys).get(values))
+                    dates.append(data.get(keys).get(values))
 
-    #Put the data into their objects
     for x in range(len(titles)):
-        if x<len(fdata.get("title").keys()):
+        if x<len(fdata.get("title").keys()):        
             fake_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         else:
             real_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         if x%2==0:
             mixed_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
-
-    
-
-training_data()
-print('fake_data: ', fake_data)
-print('real_data: ', real_data)
-print('mixed_data: ', mixed_data)
-
-    # list of newsdata objects, each index is one datapoint, fake_data 1 is first data point, each news data
-    # 
-
-
-
-#Results:
-#The final results of the AI should output:
-#The data set used, the number of fake articles found
