@@ -7,7 +7,7 @@ mixed_data=[]
 
 #Create classes 
 class NewsData:
-    def __init__(title:str, text:str, subject:str, date:str):
+    def __init__(self, title:str, text:str, subject:str, date:str):
         self.title=title
         self.text=text
         self.subject=subject
@@ -20,11 +20,15 @@ def training_data():
     rd = pd.read_csv('data/True.csv.zip')
 
     #Need to create a data set to combines both
-
     #Parse the data and convert it into a dictionary to use
     #Now you can iterate through the keys of the dict for your AI
     fdata=fd.to_dict()
     rdata=rd.to_dict()
+
+    
+    fake_data=[]
+    real_data=[]
+    mixed_data=[]
 
     #Create and store all the data to make classes
     titles=[]
@@ -32,7 +36,7 @@ def training_data():
     subjects=[]
     dates=[]
     
-    #What do we do with rdata?
+    #What do we do with rdata? fdata is actual data to use
     for data in fdata, rdata:
         for keys in data:
             for values in fdata.get(keys):
@@ -40,10 +44,10 @@ def training_data():
                     titles.append(fdata.get(keys).get(values))
                 elif(keys=="text"):
                     texts.append(fdata.get(keys).get(values))
-                elif(keys=="subjects"):
+                elif(keys=="subject"):
                     subjects.append(fdata.get(keys).get(values))
                 else:
-                    subjects.append(fdata.get(keys).get(values))
+                    dates.append(fdata.get(keys).get(values))
 
     #Put the data into their objects
     for x in range(len(titles)):
@@ -53,6 +57,16 @@ def training_data():
             real_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
         if x%2==0:
             mixed_data.append(NewsData(titles[x], texts[x], subjects[x], dates[x]))
+
+    
+
+training_data()
+print('fake_data: ', fake_data)
+print('real_data: ', real_data)
+print('mixed_data: ', mixed_data)
+
+    # list of newsdata objects, each index is one datapoint, fake_data 1 is first data point, each news data
+    # 
 
 
 
