@@ -8,7 +8,7 @@ real_data=[]
 
 test_data=[]
 
-#Create classes 
+#Create class to parse our data. real:0=Fake, 1=Real
 class NewsData:
     def __init__(self, title:str, text:str, real:int):
         self.title=title
