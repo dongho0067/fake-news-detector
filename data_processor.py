@@ -1,39 +1,62 @@
+import pandas as pd
+import numpy as np
 import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from Detector_AI import fake_data, real_data
-import string
 import torch
+import torch.nn as nn
+import torch.optim as optim
+import string
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from collections import Counter
 
 nltk.download('punkt')
 nltk.download('stopwords')
+nltk.download('wordnet')
+
+# Load data
+fake_news = pd.read_csv('data/Fake.csv.zip')
+real_news = pd.read_csv('data/True.csv.zip')
+
+fake_news['label'] = 0
+real_news['label'] = 1
+data = pd.concat([fake_news, real_news])
 
 stop_words = set(stopwords.words('english'))
+lemmatizer = WordNetLemmatizer()
 
 def preprocess_text(text):
-    # Tokenization
-    tokens = word_tokenize(text.lower())  # Convert to lowercase and tokenize
-    
-    # Remove stopwords and punctuation
-    tokens = [token for token in tokens if token not in stop_words and token not in string.punctuation]
-    
+    tokens = word_tokenize(text.lower())  # Tokenization
+    tokens = [word.strip(string.punctuation) for word in tokens if word.isalpha()]  # Remove punctuation
+    tokens = [word for word in tokens if word not in stop_words]  # Remove stopwords
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]  # Lemmatization
     return tokens
 
-# Concatenate fake and real data
-all_data = fake_data + real_data
+data['text_processed'] = data['text'].apply(preprocess_text)
 
-# Create vocabulary
-vocab = set()
-for data in all_data:
-    tokens = preprocess_text(data.text)
-    vocab.update(tokens)
+#split data into train and test by 80%, 20%
+X_train, X_test, y_train, y_test = train_test_split(data['text'], data['label'], test_size=0.2, random_state=42)
 
-# Create word to index mapping
-word_to_idx = {word: idx + 1 for idx, word in enumerate(vocab)}  # Add 1 for padding index
+max_words = 10000
+tokenizer = Tokenizer(num_words=max_words)
+tokenizer.fit_on_texts(X_train)
 
-# Convert text to tensors using word indices
-def text_to_tensor(text, max_len):
-    tokens = preprocess_text(text)
-    token_indices = [word_to_idx.get(token, 0) for token in tokens]  # Use 0 for unknown words
-    token_indices = token_indices[:max_len] + [0] * (max_len - len(token_indices))  # Padding
-    return torch.tensor(token_indices, dtype=torch.long)
+X_train_sequences = tokenizer.texts_to_sequences(X_train)
+X_test_sequences = tokenizer.texts_to_sequences(X_test)
+
+# Padding sequences to ensure uniform length
+max_sequence_length = 300
+X_train_padded = pad_sequences(X_train_sequences, maxlen=max_sequence_length)
+X_test_padded = pad_sequences(X_test_sequences, maxlen=max_sequence_length)
+
+# Convert data to PyTorch tensors
+X_train_tensor = torch.tensor(X_train_padded, dtype=torch.long)
+X_test_tensor = torch.tensor(X_test_padded, dtype=torch.long)
+y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32)
+y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32)
+
+
