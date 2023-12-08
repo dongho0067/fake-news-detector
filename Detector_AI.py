@@ -1,7 +1,6 @@
 import pandas as pd
 import torch
 import math
-from newspaper import Article
 
 fake_data=[]
 real_data=[]
