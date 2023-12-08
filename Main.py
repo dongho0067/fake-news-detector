@@ -1,21 +1,27 @@
-#Train the AI on basic input
-#Read user input
-#parse the input
-#Put that input into the AI
-#Print out results
 import pandas as pd
 import Detector_AI as dai
 from newspaper import Article
-from Success_Eval import process_results
+import Success_Eval
+import matplotlib.pyplot as plt
+from sklearn import metrics
+import seaborn as sns
+import numpy as np
 
 def main():
-    url= input("Enter the url: ")
-    date= input("Enter the date(Ex. December 17th, 2020): ")
-    article= Article(url, language="en")
-    article.download()
-    article.parse()
-    parse=dai.NewsData(article.title, article.text, "News", date)
+    print("-0 for article checker")
+    print("-1 for testing data")
+    mode=input("mode:")
 
+    if(mode=="0"):
+        url= input("Enter the url: ")
+        article= Article(url, language="en")
+        article.download()
+        article.parse()
+        parse=dai.NewsData(article.title, article.text)
+    elif(mode=="1"):
+        #dai.training_data()
+        #dai.testing_data()
+        Success_Eval.process_results(dai.test_data, 0)
 
 
 if __name__ == "__main__":
