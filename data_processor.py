@@ -14,6 +14,16 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from collections import Counter
 
+import nltk
+import ssl
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -55,8 +65,7 @@ X_test_padded = pad_sequences(X_test_sequences, maxlen=max_sequence_length)
 
 # Convert data to PyTorch tensors
 X_train_tensor = torch.tensor(X_train_padded, dtype=torch.long)
+print(X_train_tensor)
 X_test_tensor = torch.tensor(X_test_padded, dtype=torch.long)
 y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32)
 y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32)
-
-
