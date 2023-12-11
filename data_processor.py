@@ -65,7 +65,8 @@ X_test_padded = pad_sequences(X_test_sequences, maxlen=max_sequence_length)
 
 # Convert data to PyTorch tensors
 X_train_tensor = torch.tensor(X_train_padded, dtype=torch.long)
-print(X_train_tensor)
 X_test_tensor = torch.tensor(X_test_padded, dtype=torch.long)
 y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32)
 y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32)
+print (X_train)
+

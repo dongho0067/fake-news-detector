@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np # linear algebra
 import torch
 import math
 
@@ -80,4 +81,22 @@ def testing_data():
         #to only include data that has both the title and text
         if(isinstance(titles[x], str) and isinstance(texts[x], str)):
             test_data.append(NewsData(titles[x], texts[x], reals[x]))
+
+#####################################################Cleaning function#################################################################
+
+#Learned how to parse through data way faster. 
+#Read in data set to train AI on
+#td is test data. This is a set that will be used solely for testing.
+td = pd.read_csv('data/Test.csv.zip')
+
+#labels are flipped
+for i in range(len(td['label'])):
+    lb=td['label'][i]
+    #if lb==0:
+     #   td['label'][i]=1
+    #else:
+     #   td['label'][i]=0
+
+filter_td=td.loc[:, 'title', 'text', 'label']
+print(filter_td[0])
 
