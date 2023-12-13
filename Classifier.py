@@ -10,23 +10,21 @@ class FakeNewsLSTM(nn.Module):
     self.hidden_dim = hidden_dim
     self.embedding = nn.Embedding(input_dim, embedding_dim)
     self.lstm = nn.LSTM(embedding_dim, hidden_dim, batch_first=True, bidirectional=True)
-    self.fc = nn.Linear(hidden_dim*3, output_dim)
-    self.dropout = nn.Dropout(0.5)
+    self.fc = nn.Linear(hidden_dim*2, output_dim)
 
   def forward(self, input):
     embedded = self.embedding(input)
 
     lstm_out, (hidden, cell) = self.lstm(embedded)
-    output = self.fc(torch.cat((lstm_out[:, -1, :self.hidden_dim], lstm_out[:, 0, self.hidden_dim:]), dim=1))
-    output_dropped = self.dropout(output)
-    return self.fc(output_dropped)
+    output = self.fc(lstm_out[:, -1, :])
+    return output
 
 # Define hyperparameters
 input_size = 10000  # Example vocab size
 embedding_dim = 128
 hidden_dim = 64
 output_dim = 1  # Since it's binary classification (fake/real news)
-num_layers = 2
+num_layers = 3
 epochs = 10
 
 model = FakeNewsLSTM(input_dim=input_size, output_dim=output_dim, hidden_dim=hidden_dim, embedding_dim=embedding_dim)
@@ -65,13 +63,16 @@ def evaluate_model(model):
     recall = recall_score(true_labels, predictions)
     f1 = f1_score(true_labels, predictions)
 
-    return recall
+    return accuracy, precision, recall, f1
 
-recall = evaluate_model(model)
-print(recall)
+accuracy, precision, recall, f1 = evaluate_model(model)
+print("Accuracy: ", accuracy)
+print("Precision: ", precision)
+print("Recall: ", recall)
+print("F1-score: ", f1)
 threshold = 0.5
 
-if recall >= 0.5:
+if accuracy >= 0.5:
    print("Real News!")
 else:
    print("Fake News")
