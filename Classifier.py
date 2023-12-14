@@ -38,8 +38,8 @@ def train(model, num_epochs):
     model.train()
     for inputs, labels in zip(X_train_tensor, y_train_tensor): # get from processed data
         optimizer.zero_grad()
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
+        outputs = model(inputs.unsqueeze(0))
+        loss = criterion(outputs.squeeze(), labels)
         loss.backward()
         optimizer.step()
 
@@ -65,6 +65,7 @@ def evaluate_model(model):
 
     return accuracy, precision, recall, f1
 
+train(model, epochs)
 accuracy, precision, recall, f1 = evaluate_model(model)
 print("Accuracy: ", accuracy)
 print("Precision: ", precision)

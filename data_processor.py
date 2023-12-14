@@ -12,7 +12,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from collections import Counter
 
 import nltk
 import ssl
@@ -29,8 +28,8 @@ nltk.download('stopwords')
 nltk.download('wordnet')
 
 # Load data
-fake_news = pd.read_csv('data/Fake.csv.zip')
-real_news = pd.read_csv('data/True.csv.zip')
+fake_news = pd.read_csv('/content/drive/My Drive/CS4701/fake-news-detector/data/Fake.csv.zip')
+real_news = pd.read_csv('/content/drive/My Drive/CS4701/fake-news-detector/data/True.csv.zip')
 
 fake_news['label'] = 0
 real_news['label'] = 1
