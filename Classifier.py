@@ -63,17 +63,27 @@ def evaluate_model(model):
     recall = recall_score(true_labels, predictions)
     f1 = f1_score(true_labels, predictions)
 
-    return accuracy, precision, recall, f1
+    return accuracy, precision, recall, f1, predictions
+
+def count_predictions(predictions, z, o):
+    for p in predictions:
+       if p == 0:
+          z += 1
+       else:
+          o += 1
+    return z, o
+   
 
 train(model, epochs)
-accuracy, precision, recall, f1 = evaluate_model(model)
+accuracy, precision, recall, f1, predictions = evaluate_model(model)
+z, o = count_predictions(predictions, 0, 0)
 print("Accuracy: ", accuracy)
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F1-score: ", f1)
 threshold = 0.5
 
-if accuracy >= 0.5:
+if o/(z+o) > 0.5:
    print("Real News!")
 else:
    print("Fake News")
